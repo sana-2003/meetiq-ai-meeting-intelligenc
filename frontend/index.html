@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karthik — Travel Journal</title>
+<meta name="description" content="A personal travel journal by Karthik. Honest, emotional stories from the edges of the world.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --ink: #18160f; --cream: #f8f4ee; --warm: #b8916a;
+  --accent: #2e4a3e; --muted: #8a8278; --border: rgba(24,22,15,0.1); --white: #ffffff;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: 260px; min-width: 260px; background: var(--ink); color: var(--cream); position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+.sidebar-logo { padding: 2.5rem 2rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; font-style: italic; line-height: 1.2; color: var(--cream); }
+.sidebar-logo p { font-size: 0.56rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--warm); margin-top: 0.5rem; }
+.sidebar-section { padding: 1.6rem 2rem 0.5rem; }
+.sidebar-section-label { font-size: 0.52rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.22); margin-bottom: 0.9rem; }
+.sidebar-nav { list-style: none; }
+.sidebar-nav li { margin-bottom: 0.1rem; }
+.sidebar-nav a { display: flex; align-items: center; gap: 0.8rem; padding: 0.55rem 0.8rem; text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.76rem; border-radius: 4px; transition: all 0.2s; }
+.sidebar-nav a:hover, .sidebar-nav a.active { color: var(--cream); background: rgba(255,255,255,0.06); }
+.sidebar-nav a .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--warm); opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
+.sidebar-nav a:hover .dot, .sidebar-nav a.active .dot { opacity: 1; }
+.sidebar-nav a .num { font-family: 'Cormorant Garamond', serif; font-size: 0.68rem; color: rgba(255,255,255,0.18); margin-left: auto; }
+.sidebar-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 1rem 2rem; }
+.sidebar-bottom { margin-top: auto; padding: 1.5rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.sidebar-bottom p { font-size: 0.62rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.2); line-height: 1.9; }
+.sidebar-bottom a { color: var(--warm); text-decoration: none; }
+
+/* MAIN */
+.main { margin-left: 260px; min-height: 100vh; }
+
+/* HERO */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 5rem 5rem 4rem; position: relative; overflow: hidden; background: var(--ink); }
+.hero-bg-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cormorant Garamond', serif; font-size: 22vw; font-weight: 300; color: rgba(255,255,255,0.025); white-space: nowrap; pointer-events: none; user-select: none; letter-spacing: -0.05em; }
+.hero-tag { font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--warm); margin-bottom: 1.5rem; animation: fadeUp 1s 0.3s both; }
+.hero h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5.5vw, 6rem); font-weight: 300; color: var(--cream); line-height: 1.08; letter-spacing: -0.02em; animation: fadeUp 1s 0.5s both; max-width: 680px; }
+.hero h2 em { font-style: italic; color: var(--warm); }
+.hero-sub { font-size: 0.82rem; color: rgba(255,255,255,0.38); margin-top: 2rem; max-width: 420px; line-height: 1.85; animation: fadeUp 1s 0.7s both; }
+.hero-scroll { position: absolute; bottom: 2.5rem; right: 3rem; display: flex; align-items: center; gap: 1rem; animation: fadeUp 1s 1s both; }
+.hero-scroll span { font-size: 0.52rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.25); }
+.hero-scroll-line { width: 50px; height: 1px; background: linear-gradient(to right, rgba(255,255,255,0.25), transparent); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ABOUT */
+.about-strip { background: var(--white); padding: 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.label-tag { font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--warm); margin-bottom: 1.2rem; }
+.about-strip h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; line-height: 1.3; }
+.about-strip h2 em { font-style: italic; color: var(--accent); }
+.about-strip p { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; line-height: 1.95; color: var(--muted); }
+.about-strip p + p { margin-top: 1rem; }
+.stats-row { display: flex; gap: 3rem; margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+.stat .snum { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--accent); line-height: 1; }
+.stat .slabel { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+
+/* GALLERY */
+.gallery-strip { display: flex; height: 280px; overflow: hidden; }
+.gallery-strip img { flex: 1; object-fit: cover; filter: grayscale(15%); transition: flex 0.5s ease, filter 0.5s; cursor: pointer; }
+.gallery-strip img:hover { flex: 2.5; filter: grayscale(0%); }
+
+/* SECTION */
+.section { padding: 5.5rem 5rem; }
+.section-head { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.section-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; }
+.section-head .stag { font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--warm); }
+.section-head .scount { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--muted); margin-left: auto; }
+
+/* DESTINATIONS */
+.destinations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+.dest-card { background: var(--cream); padding: 2rem; transition: background 0.3s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+.dest-card:hover { background: var(--white); }
+.dest-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: rgba(24,22,15,0.05); line-height: 1; margin-bottom: 0.8rem; }
+.dest-name { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 300; margin-bottom: 0.3rem; }
+.dest-country { font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--warm); margin-bottom: 0.9rem; }
+.dest-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.7; }
+.dest-status { margin-top: 1.5rem; font-size: 0.52rem; letter-spacing: 0.3em; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem; }
+.dest-status.live { color: var(--accent); }
+.dest-status.soon { color: var(--muted); }
+.dest-status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+/* BLOG */
+.blog-entry { background: var(--white); margin-bottom: 2px; }
+.blog-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 560px; }
+.blog-inner.rev { direction: rtl; }
+.blog-inner.rev > * { direction: ltr; }
+.blog-images { position: relative; overflow: hidden; }
+.blog-images-grid { display: grid; grid-template-rows: 1fr 1fr; height: 100%; gap: 2px; }
+.blog-images-grid.single { grid-template-rows: 1fr; }
+.blog-images-grid.three { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.blog-images-grid.three img:first-child { grid-column: 1 / -1; }
+.blog-images-grid.four { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.blog-images img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+.blog-entry:hover .blog-images img { transform: scale(1.03); }
+.blog-content { padding: 4rem; display: flex; flex-direction: column; justify-content: center; }
+.blog-kicker { font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--warm); margin-bottom: 1rem; }
+.blog-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+.blog-title em { font-style: italic; color: var(--accent); }
+.blog-location { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
+.blog-text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; line-height: 1.9; color: #38342e; }
+.blog-text p + p { margin-top: 1rem; }
+.pull { margin: 1.5rem 0; padding-left: 1.2rem; border-left: 2px solid var(--warm); font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-style: italic; line-height: 1.5; color: var(--ink); }
+.blog-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.blog-tag { font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.35rem 0.8rem; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; }
+.entry-footer { padding: 1.1rem 4rem; font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
+
+/* EXPERIENCES */
+.exp-section { background: var(--ink); padding: 6rem 5rem; color: var(--cream); }
+.exp-section .section-head { border-bottom-color: rgba(255,255,255,0.08); }
+.exp-section .section-head h2 { color: var(--cream); }
+.exp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: rgba(255,255,255,0.04); }
+.exp-card { background: var(--ink); padding: 2.5rem; transition: background 0.3s; }
+.exp-card:hover { background: #1e1c15; }
+.exp-icon { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-style: italic; color: var(--warm); margin-bottom: 1rem; }
+.exp-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 300; color: var(--cream); margin-bottom: 0.8rem; }
+.exp-card p { font-size: 0.78rem; color: rgba(255,255,255,0.38); line-height: 1.85; }
+
+/* FOOTER */
+footer { background: var(--ink); padding: 4rem 5rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; color: var(--cream); }
+footer h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 300; font-style: italic; color: var(--cream); margin-bottom: 1rem; }
+footer p, footer a { font-size: 0.7rem; color: rgba(255,255,255,0.3); line-height: 2.1; text-decoration: none; display: block; transition: color 0.2s; }
+footer a:hover { color: var(--warm); }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; font-style: italic; color: rgba(255,255,255,0.06); margin-top: 1rem; }
+.footer-copy { grid-column: 1 / -1; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.12); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar { width: 100%; min-width: unset; position: relative; height: auto; }
+  .main { margin-left: 0; }
+  .layout { flex-direction: column; }
+  .blog-inner, .blog-inner.rev { grid-template-columns: 1fr; direction: ltr; }
+  .blog-images { height: 280px; }
+  .about-strip { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2rem; }
+  .section { padding: 4rem 2rem; }
+  .hero { padding: 3rem 2rem; min-height: 80vh; }
+  .destinations-grid { grid-template-columns: 1fr 1fr; }
+  .exp-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+  .exp-section { padding: 4rem 2rem; }
+  .gallery-strip { height: 200px; }
+  .entry-footer { padding: 1rem 2rem; }
+}
+@media (max-width: 560px) { .destinations-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Karthik</h1>
+    <p>Travel Journal</p>
+  </div>
+  <div class="sidebar-section">
+    <p class="sidebar-section-label">Navigate</p>
+    <ul class="sidebar-nav">
+      <li><a href="#hero" class="active"><span class="dot"></span> Home <span class="num">—</span></a></li>
+      <li><a href="#about"><span class="dot"></span> About me <span class="num">—</span></a></li>
+      <li><a href="#destinations"><span class="dot"></span> Destinations <span class="num">10+</span></a></li>
+      <li><a href="#blogs"><span class="dot"></span> Blog posts <span class="num">—</span></a></li>
+      <li><a href="#experiences"><span class="dot"></span> Experiences <span class="num">—</span></a></li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <p class="sidebar-section-label">Destinations</p>
+    <ul class="sidebar-nav">
+      <li><a href="#st-abbs"><span class="dot"></span> St. Abbs, Scotland <span class="num">01</span></a></li>
+      <li><a href="#ireland"><span class="dot"></span> Ireland <span class="num">02</span></a></li>
+      <li><a href="#edinburgh"><span class="dot"></span> Edinburgh <span class="num">03</span></a></li>
+      <li><a href="#leicester"><span class="dot"></span> Leicester <span class="num">04</span></a></li>
+      <li><a href="#dorset"><span class="dot"></span> Dorset <span class="num">05</span></a></li>
+      <li><a href="#cornwall"><span class="dot"></span> Cornwall <span class="num">06</span></a></li>
+      <li><a href="#glenfinnan"><span class="dot"></span> Glenfinnan &amp; Glencoe <span class="num">07</span></a></li>
+      <li><a href="#dest-8"><span class="dot"></span> Coming soon <span class="num">08</span></a></li>
+      <li><a href="#dest-8"><span class="dot"></span> Coming soon <span class="num">09</span></a></li>
+      <li><a href="#dest-8"><span class="dot"></span> Coming soon <span class="num">10</span></a></li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <p class="sidebar-section-label">Categories</p>
+    <ul class="sidebar-nav">
+      <li><a href="#"><span class="dot"></span> Coastal escapes</a></li>
+      <li><a href="#"><span class="dot"></span> Scottish Highlands</a></li>
+      <li><a href="#"><span class="dot"></span> City breaks</a></li>
+      <li><a href="#"><span class="dot"></span> Road trips</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-bottom">
+    <p>Written &amp; photographed by<br>
+    <strong style="color:var(--warm);font-weight:400;">Karthik</strong><br>
+    Based in the UK<br><br>
+    <a href="mailto:karthik@email.com">karthik@email.com</a></p>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-text">KARTHIK</div>
+    <p class="hero-tag">Karthik &nbsp;·&nbsp; Travel Journal &nbsp;·&nbsp; United Kingdom</p>
+    <h2>The world doesn't<br>reveal itself to<br><em>the hurried.</em></h2>
+    <p class="hero-sub">My name is Karthik. These are my honest, emotional stories from the places I've been lucky enough to stand in — written so you feel like you were there too.</p>
+    <div class="hero-scroll">
+      <span>Scroll to explore</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-strip reveal" id="about">
+    <div>
+      <p class="label-tag">Who is Karthik</p>
+      <h2>A traveller who sees<br>places as <em>stories</em><br>waiting to be told.</h2>
+      <div class="stats-row">
+        <div class="stat"><div class="snum">10+</div><div class="slabel">Destinations</div></div>
+        <div class="stat"><div class="snum">UK</div><div class="slabel">Based in</div></div>
+        <div class="stat"><div class="snum">∞</div><div class="slabel">More to come</div></div>
+      </div>
+    </div>
+    <div>
+      <p>I'm Karthik — based in the UK, originally from somewhere far more colourful, and permanently restless. I don't travel to escape life. I travel because the world outside the familiar is where I feel most alive.</p>
+      <p>These blog posts are not guides. They are feelings. They are what it actually feels like to stand somewhere extraordinary and not quite know what to do with the emotion of it.</p>
+      <p>If one of them makes you book a trip, wonderful. If one of them just makes you pause for a moment — even better.</p>
+    </div>
+  </section>
+
+  <!-- GALLERY STRIP -->
+  <div class="gallery-strip reveal">
+    <img src="images/glenfinnan-viaduct.jpeg" alt="Glenfinnan Viaduct Scotland">
+    <img src="images/glencoe-cottage.jpeg" alt="Lone cottage Glencoe Scotland">
+    <img src="images/cornwall-rainbow-cliffs.jpeg" alt="Cornwall rainbow cliffs">
+    <img src="images/ireland-rope-bridge.jpeg" alt="Carrick-a-Rede Rope Bridge">
+    <img src="images/edinburgh-rainbow.jpeg" alt="Edinburgh rainbow">
+    <img src="images/dorset-durdle-door.jpeg" alt="Durdle Door Dorset">
+  </div>
+
+  <!-- DESTINATIONS -->
+  <section class="section reveal" id="destinations">
+    <div class="section-head">
+      <h2>Destinations</h2>
+      <span class="stag">All locations</span>
+      <span class="scount">7 published · more coming</span>
+    </div>
+    <div class="destinations-grid">
+      <a class="dest-card" href="#st-abbs">
+        <div class="dest-num">01</div>
+        <div class="dest-name">St. Abbs</div>
+        <div class="dest-country">Scotland, United Kingdom</div>
+        <div class="dest-desc">Ancient red cliffs, purple wildflowers at the very edge, a North Sea so blue it doesn't look real.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#ireland">
+        <div class="dest-num">02</div>
+        <div class="dest-name">Ireland</div>
+        <div class="dest-country">Republic of Ireland &amp; Northern Ireland</div>
+        <div class="dest-desc">Rope bridges, dark hedges, Slieve League cliffs and Dublin golden at dusk.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#edinburgh">
+        <div class="dest-num">03</div>
+        <div class="dest-name">Edinburgh</div>
+        <div class="dest-country">Scotland, United Kingdom</div>
+        <div class="dest-desc">Castles, a rainbow over Princes Street, Dean Village in the rain and the Scott Monument at dusk.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#leicester">
+        <div class="dest-num">04</div>
+        <div class="dest-name">Leicester</div>
+        <div class="dest-country">England, United Kingdom</div>
+        <div class="dest-desc">A road trip through golden moorland where the drive itself was the whole destination.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#dorset">
+        <div class="dest-num">05</div>
+        <div class="dest-name">Dorset</div>
+        <div class="dest-country">England, United Kingdom</div>
+        <div class="dest-desc">Durdle Door, white chalk cliffs and waves that crash like they mean it. The Jurassic Coast at its most dramatic.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#cornwall">
+        <div class="dest-num">06</div>
+        <div class="dest-name">Cornwall</div>
+        <div class="dest-country">England, United Kingdom</div>
+        <div class="dest-desc">A rainbow touching down on ancient cliffs above turquoise water. England at its most quietly spectacular.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#glenfinnan">
+        <div class="dest-num">07</div>
+        <div class="dest-name">Glenfinnan &amp; Glencoe</div>
+        <div class="dest-country">Scottish Highlands, United Kingdom</div>
+        <div class="dest-desc">A lone white cottage beneath a cloud-swallowed mountain. The Hogwarts viaduct curving through green Highlands. Scotland at its most cinematic.</div>
+        <div class="dest-status live">Published</div>
+      </a>
+      <a class="dest-card" href="#dest-8">
+        <div class="dest-num">08</div>
+        <div class="dest-name">Next destination</div>
+        <div class="dest-country">Coming soon</div>
+        <div class="dest-desc">Karthik's next story is being lived right now. Every journey finds its way here eventually.</div>
+        <div class="dest-status soon">Coming soon</div>
+      </a>
+      <a class="dest-card" href="#dest-8">
+        <div class="dest-num">09</div>
+        <div class="dest-name">Next destination</div>
+        <div class="dest-country">Coming soon</div>
+        <div class="dest-desc">The world is large and Karthik is not done with it yet.</div>
+        <div class="dest-status soon">Coming soon</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- BLOG HEADER -->
+  <section class="section reveal" id="blogs" style="padding-bottom:1rem;">
+    <div class="section-head">
+      <h2>Blog Posts</h2>
+      <span class="stag">By Karthik</span>
+      <span class="scount">Vol. 01 — 07</span>
+    </div>
+  </section>
+
+  <!-- BLOG 01 — ST ABBS -->
+  <article class="blog-entry reveal" id="st-abbs">
+    <div class="blog-inner">
+      <div class="blog-images">
+        <div class="blog-images-grid">
+          <img src="images/st-abbs-wildflowers.jpeg" alt="St Abbs cliff wildflowers">
+          <img src="images/st-abbs-rocks.jpeg" alt="Ancient red rocks at St Abbs">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 01 &nbsp;·&nbsp; Scotland &nbsp;·&nbsp; Spring</p>
+        <h2 class="blog-title">Where the Sea Has<br><em>No Patience</em><br>for Tourists</h2>
+        <p class="blog-location">St. Abbs Head, Scottish Borders &nbsp;·&nbsp; 1 hour from Edinburgh</p>
+        <div class="blog-text">
+          <p>There are places that don't care whether you visit or not. St. Abbs is one of them. Tucked into the southeastern edge of Scotland, it sits there — ancient, windswept, completely indifferent to the fact that most people have never heard of it.</p>
+          <div class="pull">"The cliffs don't pose. The sea doesn't perform. It all just exists — with a quiet violence that makes the rest of the world feel very far away."</div>
+          <p>The rocks are rust-coloured and enormous, pushed from the earth so long ago they've forgotten they ever moved. Seabirds claim every ledge with total confidence nothing will disturb them.</p>
+          <p>What surprised me most were the wildflowers. Right at the cliff edge, clusters of sea thrift — soft purple-pink and completely unbothered by the wind. I stayed longer than I planned. That seems to happen in places that don't rush you.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Scotland</span><span class="blog-tag">Coastal</span><span class="blog-tag">Nature</span><span class="blog-tag">Hidden gems</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:280px;overflow:hidden;">
+      <img src="images/st-abbs-aerial.jpeg" alt="Aerial St Abbs coastline" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;">
+    </div>
+    <div class="entry-footer" style="background:var(--accent);">St. Abbs Head National Nature Reserve &nbsp;·&nbsp; Scottish Borders &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- BLOG 02 — IRELAND -->
+  <article class="blog-entry reveal" id="ireland">
+    <div class="blog-inner rev">
+      <div class="blog-images">
+        <div class="blog-images-grid three">
+          <img src="images/ireland-rope-bridge.jpeg" alt="Carrick-a-Rede Rope Bridge">
+          <img src="images/ireland-dark-hedges.jpeg" alt="The Dark Hedges">
+          <img src="images/ireland-cliffs.jpeg" alt="Slieve League cliffs">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 02 &nbsp;·&nbsp; Ireland &nbsp;·&nbsp; Winter — Spring</p>
+        <h2 class="blog-title">The Island That<br>Refuses to <em>Let You Go</em></h2>
+        <p class="blog-location">Dublin · Carrick-a-Rede · Slieve League · The Dark Hedges</p>
+        <div class="blog-text">
+          <p>Ireland doesn't ease you in. From the moment you arrive, it is immediately, unapologetically itself — loud and quiet at the same time, ancient and alive, the kind of place that makes you feel strangely emotional about things you cannot fully explain.</p>
+          <div class="pull">"Standing on that rope bridge — the Atlantic crashing below, the whole structure swaying — I felt something between absolute terror and absolute freedom."</div>
+          <p>The Carrick-a-Rede Rope Bridge at dusk is one of those experiences no photograph captures. Golden light bleeding behind cliffs. The sound of the sea below, indifferent and vast. You walk across and something shifts permanently.</p>
+          <p>Then the Dark Hedges — ancient beeches on a quiet country road, branches tangled like something written before electricity. Dublin from above: bridge after bridge, golden at dusk. Beautiful in a way that sneaks up on you.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Ireland</span><span class="blog-tag">Northern Ireland</span><span class="blog-tag">Coastal</span><span class="blog-tag">Wild Atlantic</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:280px;overflow:hidden;">
+      <img src="images/ireland-dublin.jpeg" alt="Dublin aerial view" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;">
+    </div>
+    <div class="entry-footer" style="background:#3a2e1e;">Dublin · Carrick-a-Rede · Slieve League · The Dark Hedges &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- BLOG 03 — EDINBURGH -->
+  <article class="blog-entry reveal" id="edinburgh">
+    <div class="blog-inner">
+      <div class="blog-images">
+        <div class="blog-images-grid four">
+          <img src="images/edinburgh-rainbow.jpeg" alt="Rainbow over Princes Street">
+          <img src="images/edinburgh-castle.jpeg" alt="Edinburgh Castle">
+          <img src="images/edinburgh-dean-village.jpeg" alt="Dean Village Edinburgh">
+          <img src="images/edinburgh-balmoral.jpeg" alt="Balmoral Hotel clock tower">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 03 &nbsp;·&nbsp; Scotland &nbsp;·&nbsp; All seasons</p>
+        <h2 class="blog-title">A City That Wears<br>Its History Like<br><em>A Coat It Never Takes Off</em></h2>
+        <p class="blog-location">Edinburgh · Castle · Dean Village · Princes Street · Scott Monument</p>
+        <div class="blog-text">
+          <p>Edinburgh makes you feel like you arrived in the middle of a very long story — one that started long before you and will continue long after. The stones are too dark, too old, too heavy with meaning for it to feel any other way.</p>
+          <div class="pull">"A rainbow broke over Princes Street while I stood in the rain — and every single person on that street stopped walking at exactly the same moment."</div>
+          <p>The castle watches the city with the patience of something that has seen several centuries come and go. The Scott Monument glows amber at dusk — Gothic, enormous, gloriously unnecessary.</p>
+          <p>Dean Village is hidden at the bottom of a gorge, ten minutes from Princes Street. Old mill buildings beside a rushing river, moss on every stone. Edinburgh hides things like this around corners, to reward those who slow down enough to look.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Edinburgh</span><span class="blog-tag">Scotland</span><span class="blog-tag">City break</span><span class="blog-tag">History</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:280px;overflow:hidden;">
+      <img src="images/edinburgh-scott-monument.jpeg" alt="Scott Monument at dusk" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;">
+    </div>
+    <div class="entry-footer" style="background:#1e2830;">Edinburgh, Scotland &nbsp;·&nbsp; Castle · Dean Village · Princes Street &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- BLOG 04 — LEICESTER -->
+  <article class="blog-entry reveal" id="leicester">
+    <div class="blog-inner rev">
+      <div class="blog-images">
+        <div class="blog-images-grid single">
+          <img src="images/leicester-road.jpeg" alt="Road trip through rolling hills">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 04 &nbsp;·&nbsp; England &nbsp;·&nbsp; Road trip</p>
+        <h2 class="blog-title">The Roads That<br>Take You There Are<br><em>Half the Story</em></h2>
+        <p class="blog-location">Leicester, England &nbsp;·&nbsp; Via the Pennines &amp; rolling moorland</p>
+        <div class="blog-text">
+          <p>There is a particular kind of peace that comes from being in a moving car with a good road ahead and hills on either side. Britain does this better than almost anywhere — within an hour of any city, the motorway opens into something that looks nothing like England is supposed to look.</p>
+          <div class="pull">"The hills were lit gold on one side, deep green on the other. The road curved through them like it was showing off. I didn't want it to end."</div>
+          <p>Leicester itself is quietly multicultural, genuinely warm, and more interesting than most people who haven't been there expect. But on this journey, the drive was the destination — moorland catching the last of the afternoon light, valleys that had no business being that beautiful on a weekday.</p>
+          <p>Some of the best travel happens between the places you planned to visit. You just have to be paying attention when it does.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Leicester</span><span class="blog-tag">England</span><span class="blog-tag">Road trip</span><span class="blog-tag">Countryside</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry-footer" style="background:#2a2018;">Leicester, England &nbsp;·&nbsp; Road trip through the Pennines &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- BLOG 05 — DORSET -->
+  <article class="blog-entry reveal" id="dorset">
+    <div class="blog-inner">
+      <div class="blog-images">
+        <div class="blog-images-grid three">
+          <img src="images/dorset-durdle-door.jpeg" alt="Durdle Door natural arch">
+          <img src="images/dorset-white-cliffs.jpeg" alt="White chalk cliffs Dorset">
+          <img src="images/dorset-aerial.jpeg" alt="Dorset Jurassic Coast aerial">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 05 &nbsp;·&nbsp; England &nbsp;·&nbsp; Jurassic Coast</p>
+        <h2 class="blog-title">England Has a<br>Wild Side and<br><em>Dorset Is It</em></h2>
+        <p class="blog-location">Durdle Door · Jurassic Coast · Dorset, England</p>
+        <div class="blog-text">
+          <p>Most people think of England as polite, managed, knowable. Then they go to Dorset and reconsider. The Jurassic Coast is 185 million years old and it shows — white chalk cliffs dropping sheer into churning water, waves crashing with total indifference.</p>
+          <div class="pull">"Durdle Door is one of those shapes that doesn't seem possible until you're standing in front of it. A natural limestone arch worn through by the sea over centuries. Quietly magnificent."</div>
+          <p>The sea shifts between turquoise and deep navy depending on depth and light. I stood on the clifftop above Durdle Door and felt, very briefly, like the world was exactly the right size. England does that to you sometimes, when you're not expecting it.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Dorset</span><span class="blog-tag">Jurassic Coast</span><span class="blog-tag">Coastal</span><span class="blog-tag">Durdle Door</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:280px;overflow:hidden;">
+      <img src="images/dorset-white-cliffs.jpeg" alt="Dorset white chalk cliffs" style="width:100%;height:100%;object-fit:cover;object-position:center 50%;">
+    </div>
+    <div class="entry-footer" style="background:#1a2535;">Durdle Door · Jurassic Coast · Dorset, England &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- BLOG 06 — CORNWALL -->
+  <article class="blog-entry reveal" id="cornwall">
+    <div class="blog-inner rev">
+      <div class="blog-images">
+        <div class="blog-images-grid single">
+          <img src="images/cornwall-rainbow-cliffs.jpeg" alt="Rainbow over Cornish cliffs">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 06 &nbsp;·&nbsp; England &nbsp;·&nbsp; Atlantic Coast</p>
+        <h2 class="blog-title">The Rainbow<br>Landed Right<br><em>Where It Should</em></h2>
+        <p class="blog-location">Cornwall, England &nbsp;·&nbsp; Atlantic Coast</p>
+        <div class="blog-text">
+          <p>Cornwall feels like it belongs to a different country entirely. There is something in the light here — the way it falls on the cliffs, the way the Atlantic catches it and throws it back — that feels more ancient than modern.</p>
+          <div class="pull">"A rainbow came in from the sea while I was standing on the clifftop and touched down on the rock below me. I stayed completely still, as if moving might make it disappear."</div>
+          <p>The cliffs are layered and dramatic — stratified rock worn into shelves and hollows by water that has been at this longer than anything in England's written history. The sea below is a colour that shouldn't exist in this part of the world: genuinely turquoise, genuinely clear.</p>
+          <p>Cornwall has the quality of somewhere that knows it is beautiful but doesn't feel the need to perform it. It just is. That is rarer than it sounds.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Cornwall</span><span class="blog-tag">England</span><span class="blog-tag">Coastal</span><span class="blog-tag">Atlantic</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:280px;overflow:hidden;">
+      <img src="images/cornwall-rainbow-cliffs.jpeg" alt="Cornwall rainbow cliffs turquoise sea" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+    <div class="entry-footer" style="background:#162028;">Cornwall, Atlantic Coast, England &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- ═══ BLOG 07 — GLENFINNAN & GLENCOE ═══ -->
+  <article class="blog-entry reveal" id="glenfinnan">
+    <div class="blog-inner">
+      <div class="blog-images">
+        <div class="blog-images-grid">
+          <img src="images/glencoe-cottage.jpeg" alt="Lone white cottage beneath cloud-swallowed mountains in Glencoe">
+          <img src="images/glenfinnan-viaduct.jpeg" alt="Glenfinnan Viaduct curving through the Scottish Highlands">
+        </div>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 07 &nbsp;·&nbsp; Scottish Highlands &nbsp;·&nbsp; Autumn</p>
+        <h2 class="blog-title">Where Scotland<br>Becomes Almost<br><em>Too Much to Bear</em></h2>
+        <p class="blog-location">Glenfinnan Viaduct · Glencoe · Scottish Highlands</p>
+        <div class="blog-text">
+          <p>There is a version of Scotland that exists in the imagination — enormous mountains wreathed in cloud, a lone white cottage in a valley so vast it makes you feel like a small and temporary thing. I had always assumed it was slightly exaggerated. Then I drove through Glencoe and understood that if anything, the imagination undersells it.</p>
+          <div class="pull">"A single white cottage at the foot of a mountain that had disappeared entirely into cloud. One tree beside it. A path leading nowhere visible. It looked like the last place on earth — and somehow exactly the right one."</div>
+          <p>The Glenfinnan Viaduct is something else entirely. Twenty-one arches curving through green Highland hills, carrying a railway line that has no business being this beautiful. You know it from a thousand photographs and films, and you think familiarity might dull it. It doesn't. Standing below those arches with the hills rising behind them, it is simply one of the most quietly magnificent things Britain has built.</p>
+          <p>Scotland in the Highlands doesn't perform. It simply exists on a scale that makes everything else feel small — and somehow, extraordinarily, that makes you feel more alive rather than less.</p>
+        </div>
+        <div class="blog-tags">
+          <span class="blog-tag">Scottish Highlands</span><span class="blog-tag">Glenfinnan</span><span class="blog-tag">Glencoe</span><span class="blog-tag">Scotland</span><span class="blog-tag">Mountains</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:340px;overflow:hidden;">
+      <img src="images/glenfinnan-viaduct.jpeg" alt="Glenfinnan Viaduct full view" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;">
+    </div>
+    <div class="entry-footer" style="background:#1a1f1a;">Glenfinnan Viaduct · Glencoe · Scottish Highlands &nbsp;·&nbsp; Photography &amp; words by Karthik</div>
+  </article>
+
+  <!-- PLACEHOLDER 08 -->
+  <article class="blog-entry reveal" id="dest-8" style="opacity:0.4;">
+    <div class="blog-inner rev">
+      <div class="blog-images" style="background:#1a1810;display:flex;align-items:center;justify-content:center;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;color:rgba(255,255,255,0.1);text-align:center;padding:2rem;">Karthik's next<br>destination</p>
+      </div>
+      <div class="blog-content">
+        <p class="blog-kicker">Entry 08 &nbsp;·&nbsp; Coming soon</p>
+        <h2 class="blog-title">The Next<br><em>Story</em></h2>
+        <p class="blog-location">Karthik's next destination — watch this space</p>
+        <div class="blog-text">
+          <p style="color:var(--muted);">Every journey becomes a story here. The next entry is being lived right now — it just hasn't been written yet.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- EXPERIENCES -->
+  <section class="exp-section reveal" id="experiences">
+    <div class="section-head">
+      <h2>Experiences</h2>
+      <span class="stag" style="color:var(--warm);">What travel means to Karthik</span>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-icon">I.</div>
+        <h3>Scotland on a scale that humbles you</h3>
+        <p>A lone white cottage in Glencoe beneath a mountain that had vanished into cloud. The Glenfinnan Viaduct curving through hills that shouldn't exist outside a film. Scotland in the Highlands doesn't perform. It simply exists — and that is enough to change you.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon">II.</div>
+        <h3>The moment you decide to cross</h3>
+        <p>The Carrick-a-Rede rope bridge taught me something permanent. There is always a moment before you step onto something uncertain. That moment — the one before you decide to go — is where the real journey begins every single time.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon">III.</div>
+        <h3>Rainbows that choose their landing spots well</h3>
+        <p>Edinburgh's rainbow stopped a whole street. Cornwall's touched down on the clifftop below where I was standing. There is a particular kind of moment where the light does something so unexpected and so perfect that the only right response is to stand completely still and not waste it.</p>
+      </div>
+      <div class="exp-card">
+        <div class="exp-icon">IV.</div>
+        <h3>The road is always part of the destination</h3>
+        <p>The drive to Leicester through golden Pennine moorland. The approach to Glencoe through valleys that grow larger and quieter with every mile. The best British travel often happens in the space between the places you planned — you just have to be paying attention.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <h3>Karthik — Travel Journal</h3>
+      <p>Written and photographed personally. Every word earned by actually being there. No press trips, no sponsored content — just honest stories from real places.</p>
+      <div class="footer-brand">K.</div>
+    </div>
+    <div>
+      <h3>Quick links</h3>
+      <a href="#about">About Karthik</a>
+      <a href="#destinations">Destinations</a>
+      <a href="#blogs">Blog posts</a>
+      <a href="#experiences">Experiences</a>
+    </div>
+    <div>
+      <h3>Get in touch</h3>
+      <a href="mailto:karthik@email.com">karthik@email.com</a>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+    </div>
+    <p class="footer-copy">© 2026 Karthik &nbsp;·&nbsp; All photographs taken personally &nbsp;·&nbsp; Deployed on Netlify</p>
+  </footer>
+
+</main>
+</div>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+reveals.forEach(r => obs.observe(r));
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
