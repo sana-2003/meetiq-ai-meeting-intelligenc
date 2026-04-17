@@ -18,14 +18,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-# ── Whisper (optional) ────────────────────────────────────────────────────────
+# ── Whisper (optional)
 try:
     import whisper
     WHISPER_AVAILABLE = True
 except ImportError:
     WHISPER_AVAILABLE = False
 
-# ── Groq (free AI) ────────────────────────────────────────────────────────────
+# ── Groq (free AI) 
 try:
     from groq import Groq
     GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
@@ -36,22 +36,22 @@ except Exception as e:
     GROQ_AVAILABLE = False
     groq_client = None
 
-# ── httpx (optional for CRM webhooks) ────────────────────────────────────────
+# ── httpx (optional for CRM webhooks) 
 try:
     import httpx
     HTTPX_AVAILABLE = True
 except ImportError:
     HTTPX_AVAILABLE = False
 
-# ── App ───────────────────────────────────────────────────────────────────────
+# ── App 
 app = FastAPI(title="MeetIQ API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-# ── In-memory store ───────────────────────────────────────────────────────────
+# ── In-memory store 
 sessions: dict[str, dict] = {}
 connected_clients: dict[str, list[WebSocket]] = {}
 
-# ── Speaker colors ────────────────────────────────────────────────────────────
+# ── Speaker colors 
 SPEAKER_COLORS = {
     "Speaker A": "#6366f1",
     "Speaker B": "#10b981",
@@ -60,7 +60,7 @@ SPEAKER_COLORS = {
     "Speaker E": "#8b5cf6",
 }
 
-# ── Pydantic models ───────────────────────────────────────────────────────────
+# ── Pydantic models 
 class CRMPushRequest(BaseModel):
     session_id: str
     crm_type: str
@@ -68,7 +68,7 @@ class CRMPushRequest(BaseModel):
     api_key: Optional[str] = None
 
 
-# ── Speaker diarization (demo mode) ──────────────────────────────────────────
+# ── Speaker diarization (demo mode) 
 def assign_speaker(segment_index: int, history: list) -> str:
     import random
     speaker_ids = list(SPEAKER_COLORS.keys())
@@ -83,7 +83,7 @@ def assign_speaker(segment_index: int, history: list) -> str:
     return history[-1]
 
 
-# ── Transcription ─────────────────────────────────────────────────────────────
+# ── Transcription 
 def transcribe_audio_chunk(audio_data: bytes) -> list[dict]:
     if WHISPER_AVAILABLE and len(audio_data) > 1000:
         try:
@@ -121,7 +121,7 @@ def transcribe_audio_chunk(audio_data: bytes) -> list[dict]:
     return [{"text": demo_segments[idx], "start": 0.0, "end": 3.5, "no_speech_prob": 0.05}]
 
 
-# ── AI: Action Items (Groq) ───────────────────────────────────────────────────
+# ── AI: Action Items (Groq) 
 async def generate_action_items(transcript: list[dict]) -> list[dict]:
     full_text = "\n".join([f"{s['speaker']}: {s['text']}" for s in transcript])
 
@@ -171,7 +171,7 @@ JSON array only:"""
     return items[:10]
 
 
-# ── AI: Summary (Groq) ────────────────────────────────────────────────────────
+# ── AI: Summary (Groq) 
 async def generate_summary(transcript: list[dict]) -> str:
     full_text = "\n".join([f"{s['speaker']}: {s['text']}" for s in transcript])
 
@@ -201,7 +201,7 @@ Summary:"""
             f"Action items were identified and assigned to respective team members.")
 
 
-# ── CRM Push ──────────────────────────────────────────────────────────────────
+# ── CRM Push 
 async def push_to_crm(session: dict, config: CRMPushRequest) -> dict:
     payload = {
         "meeting_title": session["title"],
@@ -241,7 +241,7 @@ async def push_to_crm(session: dict, config: CRMPushRequest) -> dict:
     return {"status": "simulated", "platform": config.crm_type, "payload": payload}
 
 
-# ── Broadcast ─────────────────────────────────────────────────────────────────
+# ── Broadcast 
 async def broadcast(session_id: str, event: str, data: dict):
     dead = []
     for ws in connected_clients.get(session_id, []):
@@ -253,7 +253,7 @@ async def broadcast(session_id: str, event: str, data: dict):
         connected_clients[session_id].remove(ws)
 
 
-# ── Finalize session ──────────────────────────────────────────────────────────
+# ── Finalize session 
 async def finalize_session(session_id: str):
     session = sessions[session_id]
     session["status"] = "processing"
@@ -271,7 +271,7 @@ async def finalize_session(session_id: str):
     await broadcast(session_id, "status", {"status": "completed", "message": "Meeting intelligence ready ✓"})
 
 
-# ── REST Endpoints ────────────────────────────────────────────────────────────
+# ── REST Endpoints 
 @app.post("/api/sessions")
 async def create_session(title: str = "Team Meeting"):
     sid = str(uuid.uuid4())
@@ -371,7 +371,7 @@ async def health():
     }
 
 
-# ── WebSocket ─────────────────────────────────────────────────────────────────
+# ── WebSocket 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
     await websocket.accept()
